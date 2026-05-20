@@ -26,7 +26,7 @@ declare class DBSession<T extends Record<string, Connection> | Connection = Conn
     private cleanupActive;
     private getActiveSessions;
 }
-declare const startSession: <T extends Record<string, Connection> | Connection>(req: Request, connections?: T) => Promise<T extends Record<string, Connection> ? SessionMap<T> : mongoose.mongo.ClientSession>;
+declare const startSession: <T extends Record<string, Connection> | Connection>(req: Request, connections?: T) => Promise<T extends Record<string, mongoose.Connection> ? SessionMap<T> : mongoose.mongo.ClientSession>;
 
 declare const errorMiddleware: (err: any, req: Request, res: Response, next: NextFunction) => Promise<void>;
 

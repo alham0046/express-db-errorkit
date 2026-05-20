@@ -50,7 +50,9 @@
 
 
 import { Request } from "express";
-import { Connection, ClientSession, default as mongoose } from "mongoose";
+import mongoose, { type ClientSession, type Connection } from "mongoose";
+// import { Connection, ClientSession, default as mongoose } from "mongoose";
+const { Connection: MongooseConnectionValue } = mongoose;
 
 // A type helper to map connection keys to session keys
 type SessionMap<T> = { [K in keyof T]: ClientSession };
@@ -70,7 +72,7 @@ export class DBSession<T extends Record<string, Connection> | Connection = Conne
     async start() {
         await this.cleanupActive();
 
-        if (this.target instanceof Connection) {
+        if (this.target instanceof MongooseConnectionValue) {
             // Single connection mode
             const session = await this.target.startSession();
             session.startTransaction();
@@ -110,7 +112,7 @@ export class DBSession<T extends Record<string, Connection> | Connection = Conne
     private async end() {
         const activeSessions = this.getActiveSessions();
         await Promise.all(activeSessions.map(s => s.endSession()));
-        this.sessions = (this.target instanceof Connection ? null : {}) as any;
+        this.sessions = (this.target instanceof MongooseConnectionValue ? null : {}) as any;
     }
 
     private async cleanupActive() {
@@ -123,7 +125,7 @@ export class DBSession<T extends Record<string, Connection> | Connection = Conne
     // Helper to normalize active sessions into a single flat array for iteration
     private getActiveSessions(): ClientSession[] {
         if (!this.sessions) return [];
-        if (this.target instanceof Connection) {
+        if (this.target instanceof MongooseConnectionValue) {
             return [this.sessions as ClientSession];
         }
         return Object.values(this.sessions);

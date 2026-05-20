@@ -29,7 +29,8 @@ var asyncHandler = (fn) => (req, res, next) => {
 };
 
 // src/core/DBSession.ts
-import { Connection, default as mongoose } from "mongoose";
+import mongoose from "mongoose";
+var { Connection: MongooseConnectionValue } = mongoose;
 var DBSession = class {
   target;
   // Holds either our map of sessions or a single session
@@ -39,7 +40,7 @@ var DBSession = class {
   }
   async start() {
     await this.cleanupActive();
-    if (this.target instanceof Connection) {
+    if (this.target instanceof MongooseConnectionValue) {
       const session = await this.target.startSession();
       session.startTransaction();
       this.sessions = session;
@@ -72,7 +73,7 @@ var DBSession = class {
   async end() {
     const activeSessions = this.getActiveSessions();
     await Promise.all(activeSessions.map((s) => s.endSession()));
-    this.sessions = this.target instanceof Connection ? null : {};
+    this.sessions = this.target instanceof MongooseConnectionValue ? null : {};
   }
   async cleanupActive() {
     const activeSessions = this.getActiveSessions();
@@ -83,7 +84,7 @@ var DBSession = class {
   // Helper to normalize active sessions into a single flat array for iteration
   getActiveSessions() {
     if (!this.sessions) return [];
-    if (this.target instanceof Connection) {
+    if (this.target instanceof MongooseConnectionValue) {
       return [this.sessions];
     }
     return Object.values(this.sessions);
