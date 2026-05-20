@@ -6,7 +6,7 @@ declare global {
     namespace Express {
         interface Request {
             /** Custom database session tracker for transaction rollbacks */
-            dbSession?: DBSession | null;
+            dbSession?: DBSession<any> | null;
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Connection, ClientSession, Schema } from 'mongoose';
 
 declare class ApiResponse<T> {
     statusCode: number;
@@ -12,13 +12,21 @@ declare class ApiResponse<T> {
 type AsyncController = (req: Request, res: Response, next: NextFunction) => Promise<ApiResponse<any> | void | any>;
 declare const asyncHandler: (fn: AsyncController) => RequestHandler;
 
-declare class DBSession {
-    private session;
-    start(): Promise<mongoose.mongo.ClientSession>;
+type SessionMap<T> = {
+    [K in keyof T]: ClientSession;
+};
+declare class DBSession<T extends Record<string, Connection> | Connection = Connection> {
+    private target;
+    sessions: T extends Record<string, Connection> ? SessionMap<T> : ClientSession | null;
+    constructor(target?: T);
+    start(): Promise<T extends Record<string, Connection> ? SessionMap<T> : ClientSession>;
     commit(): Promise<void>;
     abort(): Promise<void>;
+    private end;
+    private cleanupActive;
+    private getActiveSessions;
 }
-declare const startSession: (req: Request) => Promise<mongoose.mongo.ClientSession>;
+declare const startSession: <T extends Record<string, Connection> | Connection>(req: Request, connections?: T) => Promise<T extends Record<string, Connection> ? SessionMap<T> : mongoose.mongo.ClientSession>;
 
 declare const errorMiddleware: (err: any, req: Request, res: Response, next: NextFunction) => Promise<void>;
 

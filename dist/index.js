@@ -29,35 +29,70 @@ var asyncHandler = (fn) => (req, res, next) => {
 };
 
 // src/core/DBSession.ts
-import mongoose from "mongoose";
+import { Connection, default as mongoose } from "mongoose";
 var DBSession = class {
-  session = null;
+  target;
+  // Holds either our map of sessions or a single session
+  sessions = null;
+  constructor(target) {
+    this.target = target || mongoose.connection;
+  }
   async start() {
-    if (this.session) {
-      await this.abort();
+    await this.cleanupActive();
+    if (this.target instanceof Connection) {
+      const session = await this.target.startSession();
+      session.startTransaction();
+      this.sessions = session;
+      return session;
+    } else {
+      const sessionMap = {};
+      for (const [key, conn] of Object.entries(this.target)) {
+        const session = await conn.startSession();
+        session.startTransaction();
+        sessionMap[key] = session;
+      }
+      this.sessions = sessionMap;
+      return sessionMap;
     }
-    this.session = await mongoose.startSession();
-    this.session.startTransaction();
-    return this.session;
   }
   async commit() {
-    if (!this.session) return;
-    await this.session.commitTransaction();
-    await this.session.endSession();
-    this.session = null;
+    const activeSessions = this.getActiveSessions();
+    if (activeSessions.length === 0) return;
+    await Promise.all(activeSessions.map((s) => s.commitTransaction()));
+    await this.end();
   }
   async abort() {
-    if (!this.session) return;
-    await this.session.abortTransaction();
-    await this.session.endSession();
-    this.session = null;
+    const activeSessions = this.getActiveSessions();
+    if (activeSessions.length === 0) return;
+    await Promise.allSettled(
+      activeSessions.map((s) => s.inTransaction() ? s.abortTransaction() : Promise.resolve())
+    );
+    await this.end();
+  }
+  async end() {
+    const activeSessions = this.getActiveSessions();
+    await Promise.all(activeSessions.map((s) => s.endSession()));
+    this.sessions = this.target instanceof Connection ? null : {};
+  }
+  async cleanupActive() {
+    const activeSessions = this.getActiveSessions();
+    if (activeSessions.length > 0) {
+      await this.abort();
+    }
+  }
+  // Helper to normalize active sessions into a single flat array for iteration
+  getActiveSessions() {
+    if (!this.sessions) return [];
+    if (this.target instanceof Connection) {
+      return [this.sessions];
+    }
+    return Object.values(this.sessions);
   }
 };
-var startSession = async (req) => {
-  const dbSession = new DBSession();
+var startSession = async (req, connections) => {
+  const dbSession = new DBSession(connections);
   req.dbSession = dbSession;
-  const session = await dbSession.start();
-  return session;
+  return await dbSession.start();
 };
 
 // src/core/ApiError.ts
