@@ -5,7 +5,7 @@ import { NextFunction, Response } from "express"
 export const queryErrorMiddleware = function (
     this : Query<any, any> & { op: string },
     error : ErrorTypes,
-    // res : Response,
+    res : Response,
     next : NextFunction
 ) {
 

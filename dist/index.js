@@ -289,7 +289,7 @@ var throwErrorQueryPlugin = (schema) => {
 };
 
 // src/mongoose/middleware/queryErrorMiddleware.ts
-var queryErrorMiddleware = function(error, next) {
+var queryErrorMiddleware = function(error, res, next) {
   error.meta = {
     type: "query",
     modelName: this.model?.modelName,
@@ -315,7 +315,7 @@ var modelErrorMiddleware = function(error, result, next) {
 };
 
 // src/mongoose/middleware/documentErrorMiddleware.ts
-var documentErrorMiddleware = function(error, next) {
+var documentErrorMiddleware = function(error, doc, next) {
   error.meta = {
     type: "document",
     modelName: this.constructor.modelName,

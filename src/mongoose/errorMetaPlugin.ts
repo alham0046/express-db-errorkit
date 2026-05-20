@@ -20,12 +20,12 @@ export const errorMetaPlugin = (schema: Schema) => {
     queryOps.forEach((op) => {
 
         schema.post(
-            op,
-            queryErrorMiddleware
+            op as any,
+            queryErrorMiddleware as any
         )
     })
 
-    schema.post("save", documentErrorMiddleware)
+    schema.post("save" as any, documentErrorMiddleware as any)
 
     schema.post("insertMany", modelErrorMiddleware)
 }

@@ -8,7 +8,7 @@ export const documentErrorMiddleware = function (
     // this: Document & { constructor: any } & { _id: string },
     this: DocumentContext,
     error: ErrorTypes,
-    // doc: any,
+    doc: any,
     next: NextFunction
 ) {
     error.meta = {

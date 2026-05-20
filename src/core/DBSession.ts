@@ -133,12 +133,12 @@ export class DBSession<T extends Record<string, Connection> | Connection = Conne
 }
 
 
-export const startSession1 = async (req : Request) => {
-    const dbSession = new DBSession()
-    req.dbSession = dbSession
-    const session = await dbSession.start()
-    return session
-}
+// export const startSession1 = async (req : Request) => {
+//     const dbSession = new DBSession()
+//     req.dbSession = dbSession
+//     const session = await dbSession.start()
+//     return session
+// }
 
 // import { Request } from "express";
 
