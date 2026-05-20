@@ -135,7 +135,7 @@ var ErrorConfigRegistry = class {
   }
 };
 var errorConfig = new ErrorConfigRegistry();
-var errorConfigInit = errorConfig.init;
+var errorConfigInit = (options) => errorConfig.init(options);
 
 // src/errors/handleCastError.ts
 var handleCastError = (err) => {

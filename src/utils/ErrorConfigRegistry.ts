@@ -41,4 +41,10 @@ class ErrorConfigRegistry {
 // 🟢 Export a SINGLE instance of this class (The Singleton Pattern)
 export const errorConfig = new ErrorConfigRegistry();
 
-export const errorConfigInit = errorConfig.init
+// export const errorConfigInit = errorConfig.init
+export const errorConfigInit = (
+    options: {
+        duplicateKeyMap: UserDuplicateKeyMap;
+        handleCastError?: (err: any) => ProcessedErrorResult;
+    }
+) => errorConfig.init(options)
