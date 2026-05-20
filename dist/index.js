@@ -349,6 +349,7 @@ var errorMetaPlugin = (schema) => {
   schema.post("insertMany", modelErrorMiddleware);
 };
 export {
+  ApiError,
   ApiResponse,
   DBSession,
   asyncHandler,

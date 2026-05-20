@@ -28,6 +28,14 @@ declare class DBSession<T extends Record<string, Connection> | Connection = Conn
 }
 declare const startSession: <T extends Record<string, Connection> | Connection>(req: Request, connections?: T) => Promise<T extends Record<string, mongoose.Connection> ? SessionMap<T> : mongoose.mongo.ClientSession>;
 
+declare class ApiError extends Error {
+    statusCode: number;
+    data: null;
+    message: string;
+    success: boolean;
+    constructor(message?: string, statusCode?: number);
+}
+
 declare const errorMiddleware: (err: any, req: Request, res: Response, next: NextFunction) => Promise<void>;
 
 interface ProcessedErrorResult {
@@ -55,4 +63,4 @@ declare const throwErrorQueryPlugin: (schema: Schema) => void;
 
 declare const errorMetaPlugin: (schema: Schema) => void;
 
-export { ApiResponse, DBSession, asyncHandler, errorConfigInit, errorMetaPlugin, errorMiddleware, startSession, throwErrorQueryPlugin };
+export { ApiError, ApiResponse, DBSession, asyncHandler, errorConfigInit, errorMetaPlugin, errorMiddleware, startSession, throwErrorQueryPlugin };
