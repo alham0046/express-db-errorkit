@@ -1,0 +1,42 @@
+{
+  "name": "express-db-errorkit",
+  "version": "1.0.0",
+  "description": "Manages error and provides mongoose query chaining options to throw error",
+  "license": "ISC",
+  "author": "Alham",
+  "type": "module",
+  "main": "./dist/index.js",
+
+  "types": "./dist/index.d.ts",
+
+  "exports": {
+
+    ".": {
+
+      "import": "./dist/index.js",
+
+      "types": "./dist/index.d.ts"
+    }
+  },
+
+  "files": [
+    "dist"
+  ],
+
+  "scripts": {
+    "build": "tsup"
+  },
+
+  "peerDependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.6.2"
+  },
+
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  }
+}

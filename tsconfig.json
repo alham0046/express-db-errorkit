@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "es2022",
+    // "moduleResolution": "",
+    "declaration": true,
+
+    "ignoreDeprecations": "6.0",
+
+    "outDir": "./dist",
+    
+    // 🟢 CRITICAL: Tell TS to look at native node_modules types AND your custom folder
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
+    
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "include": [
+    "src",
+    "src/**/*" // 🟢 Ensures all code and your custom .d.ts files inside src are read
+  ]
+}
