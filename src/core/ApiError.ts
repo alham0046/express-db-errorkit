@@ -1,15 +1,16 @@
 export class ApiError extends Error {
     public statusCode: number;
-    public data: null;
+    public data: Record<string, any> | null;
     public message: string;
     public success: boolean
     constructor(
         message : string = "Something went wrong",
         statusCode : number = 500,
+        data: Record<string, any> | null = null
     ) {
         super(message);
         this.statusCode = statusCode;
-        this.data = null
+        this.data = data;
         this.message = message;
         this.success = false
         // 3. Fix the prototype chain tracking explicitly for TypeScript

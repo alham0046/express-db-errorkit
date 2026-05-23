@@ -102,10 +102,10 @@ var ApiError = class _ApiError extends Error {
   data;
   message;
   success;
-  constructor(message = "Something went wrong", statusCode = 500) {
+  constructor(message = "Something went wrong", statusCode = 500, data = null) {
     super(message);
     this.statusCode = statusCode;
-    this.data = null;
+    this.data = data;
     this.message = message;
     this.success = false;
     Object.setPrototypeOf(this, _ApiError.prototype);
@@ -280,7 +280,8 @@ var throwErrorQueryPlugin = (schema) => {
         const message = typeof messageOrCallback === "function" ? messageOrCallback(res) : messageOrCallback;
         throw new ApiError(
           message || "Operational conflict",
-          statusCode
+          statusCode,
+          res
         );
       }
       return res;

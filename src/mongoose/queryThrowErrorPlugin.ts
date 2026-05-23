@@ -44,7 +44,8 @@ export const throwErrorQueryPlugin = (schema: Schema) => {
 
                 throw new ApiError(
                     message || "Operational conflict",
-                    statusCode
+                    statusCode,
+                    res
                 )
             }
 

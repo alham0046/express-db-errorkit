@@ -30,10 +30,10 @@ declare const startSession: <T extends Record<string, Connection> | Connection>(
 
 declare class ApiError extends Error {
     statusCode: number;
-    data: null;
+    data: Record<string, any> | null;
     message: string;
     success: boolean;
-    constructor(message?: string, statusCode?: number);
+    constructor(message?: string, statusCode?: number, data?: Record<string, any> | null);
 }
 
 declare const errorMiddleware: (err: any, req: Request, res: Response, next: NextFunction) => Promise<void>;
