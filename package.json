@@ -1,6 +1,6 @@
 {
   "name": "express-db-errorkit",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Manages error and provides mongoose query chaining options to throw error",
   "license": "ISC",
   "author": "Alham",
