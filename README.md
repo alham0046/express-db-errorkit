@@ -41,7 +41,7 @@ mongoose.plugin(throwErrorQueryPlugin);
 
 // 🟢 Register global application centralized error interceptor last
 app.use(errorMiddleware);
-```typescript
+```
 
 
 ### 2. Initialize Error Configuration Map
@@ -67,7 +67,7 @@ export const ErrorCustomMessage = {
         message: `The structural value "${err.value}" is not a valid alphanumeric MongoDB object identifier.`
     })
 };
-```typescript
+```
 
 
 
@@ -91,7 +91,7 @@ export const processBookIssue = asyncHandler(async (req, res) => {
 
     return new ApiResponse("Operational evaluations completed successfully", { targetBook });
 });
-```typescript
+```
 
 
 
@@ -125,7 +125,7 @@ export const addBorrowRecord = asyncHandler(async (req, res) => {
     // If ANY line throws an exception, errorMiddleware intercepts it and calls abort() safely.
     return new ApiResponse("Borrow tracker record logged successfully", newRecord, 201);
 });
-```typescript
+```
 
 
 
@@ -143,4 +143,4 @@ errorMiddleware Interceptor: If a query fails, this middleware intercepts the na
   "message": "Registration roll number \"2026-0042\" is already claimed by another active student record.",
   "data": null
 }
-```json
+```
